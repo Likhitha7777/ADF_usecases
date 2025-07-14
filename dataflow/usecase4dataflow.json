@@ -1,0 +1,91 @@
+{
+	"name": "usecase4dataflow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "sales",
+						"type": "DatasetReference"
+					},
+					"name": "salesdetails"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "sales_details",
+						"type": "DatasetReference"
+					},
+					"name": "validsink"
+				},
+				{
+					"dataset": {
+						"referenceName": "sales_details_fail",
+						"type": "DatasetReference"
+					},
+					"name": "invalidsink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "validsalesdetails"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          SalesDate as string,",
+				"          SalesMan as string,",
+				"          Item as string,",
+				"          Units as string,",
+				"          Unit_price as string,",
+				"          Sale_amt as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> salesdetails",
+				"salesdetails split(isDate(SalesDate, 'dd-MM-yyyy') && isFloat(Sale_amt) && isInteger(Units) && toInteger(Units) > 0 && isFloat(Unit_price),",
+				"     !isDate(SalesDate, 'dd-MM-yyyy') || !isFloat(Sale_amt) || !isInteger(Units) || toInteger(Units) <= 0 || !isFloat(Unit_price),",
+				"     disjoint: false) ~> validsalesdetails@(validsales, invalidsales)",
+				"validsalesdetails@validsales sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          SalesDate as date,",
+				"          SalesMan as string,",
+				"          Item as string,",
+				"          Units as integer,",
+				"          Unit_price as double,",
+				"          Sale_amt as double",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> validsink",
+				"validsalesdetails@invalidsales sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          SalesDate as string,",
+				"          SalesMan as string,",
+				"          Item as string,",
+				"          Units as string,",
+				"          Unit_price as string,",
+				"          Sale_amt as string,",
+				"          ErrorMessage as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> invalidsink"
+			]
+		}
+	}
+}
