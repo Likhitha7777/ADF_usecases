@@ -1,0 +1,45 @@
+{
+	"name": "validSales",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "SalesDate",
+				"type": "date"
+			},
+			{
+				"name": "SalesMan",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Item",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Units",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Unit_price",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "Sale_amt",
+				"type": "float",
+				"precision": 15
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Sales_details"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

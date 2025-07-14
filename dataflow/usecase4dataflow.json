@@ -9,28 +9,28 @@
 						"referenceName": "sales",
 						"type": "DatasetReference"
 					},
-					"name": "salesdetails"
+					"name": "sales"
 				}
 			],
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "sales_details",
+						"referenceName": "validSales",
 						"type": "DatasetReference"
 					},
-					"name": "validsink"
+					"name": "validsalesink"
 				},
 				{
 					"dataset": {
-						"referenceName": "sales_details_fail",
+						"referenceName": "invalidSales",
 						"type": "DatasetReference"
 					},
-					"name": "invalidsink"
+					"name": "invalidsalesink"
 				}
 			],
 			"transformations": [
 				{
-					"name": "validsalesdetails"
+					"name": "validsales"
 				}
 			],
 			"scriptLines": [
@@ -44,11 +44,10 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> salesdetails",
-				"salesdetails split(isDate(SalesDate, 'dd-MM-yyyy') && isFloat(Sale_amt) && isInteger(Units) && toInteger(Units) > 0 && isFloat(Unit_price),",
-				"     !isDate(SalesDate, 'dd-MM-yyyy') || !isFloat(Sale_amt) || !isInteger(Units) || toInteger(Units) <= 0 || !isFloat(Unit_price),",
-				"     disjoint: false) ~> validsalesdetails@(validsales, invalidsales)",
-				"validsalesdetails@validsales sink(allowSchemaDrift: true,",
+				"     ignoreNoFilesFound: false) ~> sales",
+				"sales split(!isNull(SalesDate)&&!isNull(SalesMan) &&!isNull(Item)&& !isNull(Units) && toDecimal(Unit_price) >= 0.0 && toDecimal(Sale_amt)>= 0.0,",
+				"     disjoint: false) ~> validsales@(validsales, invalidsales)",
+				"validsales@validsales sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          SalesDate as date,",
@@ -65,8 +64,8 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> validsink",
-				"validsalesdetails@invalidsales sink(allowSchemaDrift: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> validsalesink",
+				"validsales@invalidsales sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          SalesDate as string,",
@@ -84,7 +83,7 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> invalidsink"
+				"     errorHandlingOption: 'stopOnFirstError') ~> invalidsalesink"
 			]
 		}
 	}
