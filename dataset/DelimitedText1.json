@@ -10,7 +10,8 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"container": "case5"
+				"fileName": "Employee_Details.csv",
+				"container": "usecase3container"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
@@ -19,11 +20,11 @@
 		},
 		"schema": [
 			{
-				"name": "ID",
+				"name": "EmployeeID",
 				"type": "String"
 			},
 			{
-				"name": "Name",
+				"name": "EmployeeName",
 				"type": "String"
 			},
 			{
@@ -31,53 +32,18 @@
 				"type": "String"
 			},
 			{
-				"name": "Age",
+				"name": "Location",
 				"type": "String"
 			},
 			{
-				"name": "Height (cm)",
+				"name": "Designation",
 				"type": "String"
 			},
 			{
-				"name": "Weight (kg)",
-				"type": "String"
-			},
-			{
-				"name": "Team",
-				"type": "String"
-			},
-			{
-				"name": "NOC",
-				"type": "String"
-			},
-			{
-				"name": "Games",
-				"type": "String"
-			},
-			{
-				"name": "Year",
-				"type": "String"
-			},
-			{
-				"name": "Season",
-				"type": "String"
-			},
-			{
-				"name": "City",
-				"type": "String"
-			},
-			{
-				"name": "Sport",
-				"type": "String"
-			},
-			{
-				"name": "Event",
-				"type": "String"
-			},
-			{
-				"name": "Medal",
+				"name": "Salary",
 				"type": "String"
 			}
 		]
-	}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
 }
