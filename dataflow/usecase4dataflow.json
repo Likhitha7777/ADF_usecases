@@ -1,89 +1,178 @@
 {
-	"name": "usecase4dataflow",
+
+	"name": "dataflow4",
+
 	"properties": {
+
 		"type": "MappingDataFlow",
+
 		"typeProperties": {
+
 			"sources": [
+
 				{
+
 					"dataset": {
-						"referenceName": "DelimitedText2",
+
+						"referenceName": "DelimitedText1",
+
 						"type": "DatasetReference"
+
 					},
-					"name": "sales"
+
+					"name": "source1"
+
 				}
+
 			],
+
 			"sinks": [
+
 				{
+
 					"dataset": {
-						"referenceName": "AzureSqlTable2",
+
+						"referenceName": "AzureSqlTable1",
+
 						"type": "DatasetReference"
+
 					},
-					"name": "validsink"
+
+					"name": "sink1"
+
 				},
+
 				{
+
 					"dataset": {
-						"referenceName": "AzureSqlTable4",
+
+						"referenceName": "AzureSqlTable2",
+
 						"type": "DatasetReference"
+
 					},
-					"name": "invalidsink"
+
+					"name": "sink2"
+
 				}
+
 			],
+
 			"transformations": [
+
 				{
-					"name": "validSales"
+
+					"name": "split1"
+
 				}
+
 			],
+
 			"scriptLines": [
+
 				"source(output(",
+
 				"          SalesDate as date 'dd-MM-yyyy',",
+
 				"          SalesMan as string,",
+
 				"          Item as string,",
+
 				"          Units as integer,",
+
 				"          Unit_price as double '000,000,000.000',",
+
 				"          Sale_amt as double '000,000,000.000'",
+
 				"     ),",
+
 				"     allowSchemaDrift: true,",
+
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> sales",
-				"sales split(Units > 0 && toDecimal(Unit_price) >= 0.0 && toDecimal(Sale_amt) >= 0.0 &&!isNull(SalesMan) &&!isNull(SalesDate) &&!isNull(Item),",
-				"     disjoint: false) ~> validSales@(valid, invalid)",
-				"validSales@valid sink(allowSchemaDrift: true,",
+
+				"     ignoreNoFilesFound: false) ~> source1",
+
+				"source1 split(Units > 0 && toDecimal(Unit_price) >= 0.0 && toDecimal(Sale_amt) >= 0.0 &&!isNull(SalesMan) &&!isNull(SalesDate) &&!isNull(Item),",
+
+				"     disjoint: false) ~> split1@(valid, invalid)",
+
+				"split1@valid sink(allowSchemaDrift: true,",
+
 				"     validateSchema: false,",
+
 				"     input(",
+
 				"          SalesDate as date,",
+
 				"          SalesMan as string,",
+
 				"          Item as string,",
+
 				"          Units as integer,",
+
 				"          Unit_price as decimal(10,2),",
+
 				"          Sale_amt as decimal(10,2)",
+
 				"     ),",
+
 				"     deletable:false,",
+
 				"     insertable:true,",
+
 				"     updateable:false,",
+
 				"     upsertable:false,",
+
 				"     format: 'table',",
+
 				"     skipDuplicateMapInputs: true,",
+
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> validsink",
-				"validSales@invalid sink(allowSchemaDrift: true,",
+
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1",
+
+				"split1@invalid sink(allowSchemaDrift: true,",
+
 				"     validateSchema: false,",
+
 				"     input(",
+
 				"          SalesDate as date,",
+
 				"          SalesMan as string,",
+
 				"          Item as string,",
+
 				"          Units as integer,",
+
 				"          Unit_price as decimal(10,2),",
+
 				"          Sale_amt as decimal(10,2)",
+
 				"     ),",
+
 				"     deletable:false,",
+
 				"     insertable:true,",
+
 				"     updateable:false,",
+
 				"     upsertable:false,",
+
 				"     format: 'table',",
+
 				"     skipDuplicateMapInputs: true,",
+
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> invalidsink"
+
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink2"
+
 			]
+
 		}
+
 	}
+
 }
+ 
