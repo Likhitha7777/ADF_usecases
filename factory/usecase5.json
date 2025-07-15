@@ -1,0 +1,9 @@
+{
+	"name": "usecase5",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "0bc218c4-ca58-4b35-9d63-e6858b67e711",
+		"tenantId": "76a2ae5a-9f00-4f6b-95ed-5d33d77c4d61"
+	}
+}
